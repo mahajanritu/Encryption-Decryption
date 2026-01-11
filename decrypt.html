@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Decrypt Message</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+<header>
+    <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Ffreepng%2Fcryptography-concept-icon-computer-programming-vector-vector_12677089.html&psig=AOvVaw1UyPR0wZuU2PrwZ8-KwWoE&ust=1760260685856000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCMjC35Tom5ADFQAAAAAdAAAAABAL" alt="Logo">
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="encrypt.html">Encrypt</a>
+        <a href="decrypt.html">Decrypt</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Decrypt Your Message</h1>
+    <input type="text" id="key" placeholder="Enter Secret Key">
+    <textarea id="inputText" rows="5" placeholder="Enter message to decrypt"></textarea>
+    <button onclick="decryptText()">Decrypt</button>
+    <h3>Decrypted Result:</h3>
+    <textarea id="outputText" readonly></textarea>
+</div>
+
+<script>
+function decryptText() {
+    let key = document.getElementById("key").value;
+    let text = document.getElementById("inputText").value;
+    if(!key || !text){ alert("Enter key and message!"); return; }
+    try{
+        let bytes = CryptoJS.AES.decrypt(text, key);
+        let decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        if(!decrypted){ alert("Wrong key or invalid message!"); return; }
+        document.getElementById("outputText").value = decrypted;
+    }catch(e){ alert("Error decrypting message!"); }
+}
+</script>
+
+<footer>
+    &copy; 2025 Encryption Project | All Rights Reserved
+</footer>
+</body>
+</html>

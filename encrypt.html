@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Encrypt Message</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+<header>
+    <img src="logo.png" alt="Logo">
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="encrypt.html">Encrypt</a>
+        <a href="decrypt.html">Decrypt</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Encrypt Your Message</h1>
+    <input type="text" id="key" placeholder="Enter Secret Key">
+    <textarea id="inputText" rows="5" placeholder="Enter message to encrypt"></textarea>
+    <button onclick="encryptText()">Encrypt</button>
+    <h3>Encrypted Result:</h3>
+    <textarea id="outputText" readonly></textarea>
+</div>
+
+<script>
+function encryptText() {
+    let key = document.getElementById("key").value;
+    let text = document.getElementById("inputText").value;
+    if(!key || !text){ alert("Enter key and message!"); return; }
+    let encrypted = CryptoJS.AES.encrypt(text, key).toString();
+    document.getElementById("outputText").value = encrypted;
+}
+</script>
+
+<footer>
+    &copy; 2025 Encryption Project | All Rights Reserved
+</footer>
+</body>
+</html>

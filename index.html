@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> encode-decode</title>
+ <link rel="icon" href="logo2.png" type="image/png">
+<!-- CryptoJS Library for AES -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<style>
+    /* General Styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth; /* Smooth scrolling */
+        background: #f4f4f4;
+        color: #333;
+    }
+
+    /* Header */
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 30px;
+        background: linear-gradient(90deg, #ffffff, #ffccdd, #e6e6fa);
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* Logo */
+    header img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    /* Navigation Links */
+    nav a {
+        color: #333;
+        margin: 0 12px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    nav a:hover {
+        color: #800080;
+    }
+
+    /* Sections */
+    section {
+        padding: 60px 20px;
+        max-width: 10000px;
+        margin: auto;
+    }
+
+    section h1, section h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    section p {
+        margin: 15px 0;
+        text-align: justify;
+    }
+
+    /* Images */
+    img.content-image {
+        width: 100%;
+        max-width: 100px;
+        border-radius: 10px;
+        margin: 15px auto;
+        display: block;
+    }
+
+    /* Buttons */
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 5px;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    /* Output box */
+    .output-box {
+        background: #fff;
+        color: #000;
+        padding: 10px;
+        border-radius: 5px;
+        min-height: 60px;
+        word-wrap: break-word;
+    }
+
+    /* Footer */
+    footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+
+    .modal{
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-box{
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  position: relative;
+}
+
+.modal-box input{
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.modal-box button{
+  width: 100%;
+  background: linear-gradient(90deg,#ff7eb9,#8e44ad);
+  color: white;
+}
+
+.close{
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+
+
+.dark {
+  background: #121212;
+  color: white;
+}
+.dark section {
+  background: #1e1e1e !important;
+}
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        header {
+            flex-direction: column;
+            text-align: center;
+        }
+        header img {
+            height: 50px;
+        }
+        nav {
+            margin-top: 10px;
+        }
+    }
+
+    /* ===== DARK MODE FIX ===== */
+.dark {
+  background-color: #121212;
+  color: white;
+}
+
+/* Sab text white */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark p,
+.dark span,
+.dark label,
+.dark a {
+  color: white !important;
+}
+
+/* Input & textarea text */
+.dark input,
+.dark textarea {
+  background: #1e1e1e;
+  color: white;
+  border: 1px solid #555;
+}
+
+/* Output box text */
+.dark .output-box {
+  background: #1e1e1e;
+  color: white;
+}
+
+/* Navbar links */
+.dark nav a {
+  color: white !important;
+}
+
+/* Footer */
+.dark footer {
+  background: #1a1a1a;
+  color: white;
+}
+/* ===== GLASS BUTTON ===== */
+.glass-btn {
+  background: rgba(255, 255, 255, 0.25);
+  color: #8e44ad;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+/* Dark mode glass fix */
+.dark .glass-btn {
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.dark .glass-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/*======hover effects for about and how it works sections===*/
+#about-features div:hover, #how-it-works div:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+  transition: all 0.3s ease-in-out;
+}
+#about-features {
+  background: linear-gradient(135deg,#ffe6f0,#e6f0ff);
+}
+#how-it-works {
+  background: linear-gradient(135deg,#fff0f5,#e6f7ff);
+}
+
+
+</style>
+</head>
+
+
+
+<body>
+
+<header>
+    <img src="logo2.png" alt="Logo">
+    <nav>
+       <button onclick="toggleDark()" class="glass-btn">🌙</button>
+
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#encrypt">Encrypt</a>
+        <a href="#decrypt">Decrypt</a>
+       <a href="login.html">Login</a>
+       <a href="signup.html">Sign Up</a>
+
+    
+       <span id="userName" style="cursor:pointer; font-weight:bold;"></span>
+    
+    </nav>
+</header>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal">
+  <div class="modal-box">
+    <span class="close" onclick="closeModal('loginModal')">&times;</span>
+    <h2>Login</h2>
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button>Login</button>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div id="signupModal" class="modal">
+  <div class="modal-box">
+    <span class="close" onclick="closeModal('signupModal')">&times;</span>
+    <h2>Sign Up</h2>
+    <input type="text" placeholder="Full Name">
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button>Create Account</button>
+  </div>
+</div>
+
+
+<!-- Home Section -->
+<section id="home" style="background: linear-gradient(135deg, #ffedf0, #e6e6fa); padding: 80px 20px; text-align: center;">
+    <h1 style="font-size: 3em; background: linear-gradient(90deg, #ff7eb9, #8e44ad); -webkit-background-clip: text; color: transparent; margin-bottom: 20px;">
+        Welcome to Secure Encryption & Decryption
+    </h1>
+    <p style="font-size: 1.2em; max-width: 700px; margin: 0 auto 40px auto; color: #333;">
+        Explore secure text encryption and decryption using AES encryption. Protect your messages and ensure privacy with our easy-to-use web tool.
+    </p>
+
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
+        <!-- Encryption Card -->
+        <a href="#encrypt" style="text-decoration: none; color: inherit;">
+            <div style="position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.3s; width: 350px; cursor: pointer;">
+                <img src="h1.png" alt="Encryption" style="width: 100%; height: auto; display: block; transition: transform 0.5s;">
+                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.5); color: #fff; width: 100%; padding: 10px; font-weight: bold; font-size: 1.2em;">Encryption</div>
+            </div>
+        </a>
+
+        <!-- Decryption Card -->
+        <a href="#decrypt" style="text-decoration: none; color: inherit;">
+            <div style="position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.3s; width: 350px; cursor: pointer;">
+                <img src="h2.png" alt="Decryption" style="width: 100%; height: auto; display: block; transition: transform 0.5s;">
+                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.5); color: #fff; width: 100%; padding: 10px; font-weight: bold; font-size: 1.2em;">Decryption</div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<style>
+    /* Image hover effect */
+    #home img:hover {
+        transform: scale(1.05);
+    }
+    /* Card hover effect */
+    #home div:hover {
+        transform: translateY(-5px);
+    }
+</style>
+
+
+<!-- About Section -->
+<section id="about" style="background: linear-gradient(135deg, #fef9f9, #e6f0ff); padding: 80px 20px;">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <h2 style="text-align: center; font-size: 3em; font-family: 'Poppins', sans-serif; background: linear-gradient(90deg, #ff7eb9, #8e44ad); -webkit-background-clip: text; color: transparent; margin-bottom: 50px;">
+        About Encryption & Decryption
+    </h2>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 50px; align-items: flex-start;">
+        <!-- Text Content -->
+        <div style="flex: 1; min-width: 300px; max-width: 500px; font-family: 'Poppins', sans-serif; line-height: 1.7; color: #333;">
+            <p style="font-size: 1.15em; margin-bottom: 20px;">
+                <strong>Encryption</strong> is the process of converting plain text into unreadable text using a secret key. This ensures that only authorized users can access the information and keeps sensitive data safe from unauthorized access.
+            </p>
+            <p style="font-size: 1.15em; margin-bottom: 20px;">
+                <strong>Decryption</strong> is the reverse process, converting encrypted text back into readable form using the key. Without the correct key, the message remains scrambled and unreadable.
+            </p>
+            <p style="font-size: 1.15em; margin-bottom: 20px;">
+                <strong>AES (Advanced Encryption Standard)</strong> is a symmetric key encryption algorithm widely used in government, banking, and software applications due to its high security and efficiency.
+            </p>
+            <p style="font-size: 1.15em; margin-bottom: 20px;">
+                Encryption can be <strong>symmetric</strong> (same key for encryption and decryption) or <strong>asymmetric</strong> (public and private key pair). AES is a symmetric method that is fast and secure for encrypting large amounts of data.
+            </p>
+            <p style="font-size: 1.15em;">
+                Strong encryption ensures <strong>data privacy, secure communication, and protection against cyber attacks</strong>. Our project demonstrates how AES encryption can be used to secure your messages efficiently.
+            </p>
+        </div>
+
+        <!-- Images -->
+        <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 25px; align-items: center;">
+            <div style="position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 12px 25px rgba(0,0,0,0.2); transition: transform 0.3s;">
+                <img src="a1.png" alt="Encryption" style="width: 250px; display: block; transition: transform 0.5s;">
+                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.55); color: #fff; width: 100%; padding: 10px; font-weight: 600; text-align: center;">Encryption</div>
+            </div>
+            <div style="position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 12px 25px rgba(0,0,0,0.2); transition: transform 0.3s;">
+                <img src="a2.png" alt="Decryption" style="width: 250px; display: block; transition: transform 0.5s;">
+                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.55); color: #fff; width: 100%; padding: 10px; font-weight: 600; text-align: center;">Decryption</div>
+            </div>
+            <div style="position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 12px 25px rgba(0,0,0,0.2); transition: transform 0.3s;">
+                <img src="a3.png" alt="AES" style="width: 250px; display: block; transition: transform 0.5s;">
+                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.55); color: #fff; width: 100%; padding: 10px; font-weight: 600; text-align: center;">AES Encryption</div>
+            </div>
+            <!-- New DES Image -->
+            <div style="position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 12px 25px rgba(0,0,0,0.2); transition: transform 0.3s;">
+                <img src="a5.png" alt="DES" style="width: 250px; display: block; transition: transform 0.5s;">
+                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.55); color: #fff; width: 100%; padding: 10px; font-weight: 600; text-align: center;">DES Encryption</div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="how-it-works" style="background:#fff0f5; padding:60px 20px; text-align:center;">
+  <h2 style="font-size:2.8em; color:#8e44ad;">How It Works</h2>
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:40px; margin-top:40px;">
+
+    <div style="flex:1; min-width:200px;">
+      <img src="step1.png" style="width:80px;">
+      <h3>Step 1: Enter Key</h3>
+      <p>Choose a secure secret key for encryption.</p>
+    </div>
+
+    <div style="flex:1; min-width:200px;">
+      <img src="step2.png" style="width:80px;">
+      <h3>Step 2: Encrypt Message</h3>
+      <p>Type your message and click encrypt to secure it.</p>
+    </div>
+
+    <div style="flex:1; min-width:200px;">
+      <img src="step3.png" style="width:80px;">
+      <h3>Step 3: Decrypt Message</h3>
+      <p>Use the correct key to decrypt the message anytime.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<style>
+    /* Hover effects */
+    #about img:hover {
+        transform: scale(1.07);
+    }
+    #about div:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Optional: make text more readable */
+    #about p strong {
+        color: #8e44ad;
+    }
+</style>
+
+
+
+<!-- Encrypt Section -->
+<section id="encrypt" style="background: linear-gradient(135deg, #ffe6f0, #e6f7ff); padding: 100px 20px; text-align: center; position: relative; overflow: hidden;">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <h2 style="font-size: 3em; font-family: 'Poppins', sans-serif; background: linear-gradient(90deg, #ff7eb9, #8e44ad); -webkit-background-clip: text; color: transparent; margin-bottom: 50px;">
+        Encrypt Your Message
+    </h2>
+
+
+    <div style="max-width: 650px; margin: auto; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
+        
+        <!-- AES Icon -->
+        <img src="a3.png" alt="AES" style="width: 250px; height: 200px; margin-bottom: 20px;"center>
+
+        <!-- Inputs -->
+        <input type="text" id="encryptKey" placeholder="Enter Secret Key" style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 12px; border: none; font-size: 1.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+
+        <small id="keyStrength" style="display:block;margin-bottom:15px;color:#8e44ad;font-weight:600;"></small>
+
+
+
+        <textarea id="encryptText" rows="5" placeholder="Enter message to encrypt" style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 12px; border: none; font-size: 1.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></textarea>
+        
+        
+        <!-- Button -->
+        <button onclick="checkLoginEncrypt()"style="background: linear-gradient(90deg, #ff7eb9, #8e44ad); color: white; font-size: 1.2em; padding: 15px 30px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 8px 20px rgba(142,68,173,0.5);">
+            Encrypt <span style="margin-left: 8px;">🔒</span>
+
+        </button>
+
+        <!-- Encrypted Output -->
+        <h3 style="margin-top: 35px; color: #8e44ad; font-family: 'Poppins', sans-serif;">Encrypted Result:</h3>
+        <div class="output-box" id="encryptOutput" style="background: rgba(255,255,255,0.25); padding: 20px; border-radius: 15px; min-height: 70px; font-family: 'Poppins', sans-serif; font-size: 1.05em; word-wrap: break-word; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>
+
+        <button onclick="copyText('encryptOutput')" class="glass-btn">Copy 🔁</button>
+
+    </div>
+</section>
+
+<style>
+    /* Card hover effect */
+    #encrypt div:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    /* Button hover effect */
+    #encrypt button:hover {
+        transform: scale(1.05);
+        opacity: 0.95;
+    }
+
+    /* Input/textarea focus glow */
+    #encrypt input:focus, #encrypt textarea:focus {
+        outline: none;
+        box-shadow: 0 0 10px rgba(142,68,173,0.6);
+    }
+</style>
+
+
+<!-- Decrypt Section -->
+<section id="decrypt" style="background: linear-gradient(135deg, #e6fff7, #fff0f5); padding: 100px 20px; text-align: center; position: relative; overflow: hidden;">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <h2 style="font-size: 3em; font-family: 'Poppins', sans-serif; background: linear-gradient(90deg, #00c6ff, #8e44ad); -webkit-background-clip: text; color: transparent; margin-bottom: 50px;">
+        Decrypt Your Message
+    </h2>
+
+    <div style="max-width: 650px; margin: auto; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
+        
+        <!-- AES Icon -->
+        <img src="a4.png" alt="AES" style="width: 250px; height: 200; margin-bottom: 20px;"center>
+
+        <!-- Inputs -->
+        <input type="text" id="decryptKey" placeholder="Enter Secret Key" style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 12px; border: none; font-size: 1.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        <textarea id="decryptText" rows="5" placeholder="Enter message to decrypt" style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 12px; border: none; font-size: 1.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></textarea>
+        
+        <!-- Button -->
+        <button onclick="checkLoginDecrypt()" style="background: linear-gradient(90deg, #00c6ff, #8e44ad); color: white; font-size: 1.2em; padding: 15px 30px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 8px 20px rgba(142,68,173,0.5);">
+            Decrypt <span style="margin-left: 8px;">🔓</span>
+        </button>
+
+        <!-- Decrypted Output -->
+        <h3 style="margin-top: 35px; color: #8e44ad; font-family: 'Poppins', sans-serif;">Decrypted Result:</h3>
+        <div class="output-box" id="decryptOutput" style="background: rgba(255,255,255,0.25); padding: 20px; border-radius: 15px; min-height: 70px; font-family: 'Poppins', sans-serif; font-size: 1.05em; word-wrap: break-word; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>
+
+       <button onclick="copyText('decryptOutput')" class="glass-btn">Copy 🔁</button>
+    </div>
+
+
+<div id="toast"
+style="opacity:0;pointer-events:none;min-width:250px;background:#8e44ad;color:white;text-align:center;border-radius:10px;padding:14px;position:fixed;z-index:3000;right:20px;bottom:30px;font-weight:600;transition:opacity 0.4s ease;">
+</div>
+
+</section>
+
+<style>
+    /* Card hover effect */
+    #decrypt div:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    /* Button hover effect */
+    #decrypt button:hover {
+        transform: scale(1.05);
+        opacity: 0.95;
+    }
+
+    /* Input/textarea focus glow */
+    #decrypt input:focus, #decrypt textarea:focus {
+        outline: none;
+        box-shadow: 0 0 10px rgba(142,68,173,0.6);
+    }
+</style>
+
+<!-- Footer -->
+<footer style="background: linear-gradient(135deg, #ff7eb9, #8e44ad); padding: 40px 20px; text-align: center; color: #fff; font-family: 'Poppins', sans-serif; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); border-top-left-radius: 20px; border-top-right-radius: 20px;">
+    <p style="font-size: 1.2em; margin: 0 0 10px 0;">
+        &copy; 2025 Encryption & Decryption| Developed by <strong style="color: #ffe6f0;">Ritu Mahajan</strong>
+    </p>
+    <p style="font-size: 0.95em; margin: 0; opacity: 0.85;">
+        All Rights Reserved | Secure Encryption & Decryption Web App
+    </p>
+</footer>
+
+<!-- Optional: Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script>
+//check login status
+function isUserLoggedIn() {
+  return localStorage.getItem("isLogin") === "true";
+}
+
+function checkLoginEncrypt() {
+  if (!isUserLoggedIn()) {
+    alert("Please login first to encrypt 🔐");
+    return;
+  }
+  encryptMessage(); // already existing function
+}
+
+function checkLoginDecrypt() {
+  if (!isUserLoggedIn()) {
+    alert("Please login first to decl̥rypt 🔐");
+    return;
+  }
+  decryptMessage(); // already existing function
+}
+
+
+    // Encrypt function
+    function encryptMessage() {
+  let key = document.getElementById("encryptKey").value;
+  let message = document.getElementById("encryptText").value;
+
+  if (!key || !message) {
+    showToast("Please enter key & message ❌", "#e74c3c");
+    return;
+  }
+
+  let encrypted = CryptoJS.AES.encrypt(message, key).toString();
+  document.getElementById("encryptOutput").innerText = encrypted;
+
+  saveHistory("Encrypt", encrypted, key);
+  showToast("Encrypted Successfully 🔒", "#27ae60");
+}
+
+    // Decrypt function
+ function decryptMessage() {
+  let key = document.getElementById("decryptKey").value;
+  let message = document.getElementById("decryptText").value;
+
+  if (!key || !message) {
+    showToast("Please enter key & text ❌", "#e74c3c");
+    return;
+  }
+
+  let bytes = CryptoJS.AES.decrypt(message, key);
+  let decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+  if (!decrypted) {
+    showToast("Wrong key ❌", "#e74c3c");
+    return;
+  }
+
+  document.getElementById("decryptOutput").innerText = decrypted;
+  saveHistory("Decrypt", decrypted, key);
+
+  showToast("Decrypted Successfully 🔓", "#2980b9");
+}
+
+    
+function openLogin(){
+  document.getElementById("loginModal").style.display = "flex";
+}
+
+function openSignup(){
+  document.getElementById("signupModal").style.display = "flex";
+}
+
+function closeModal(id){
+  document.getElementById(id).style.display = "none";
+}
+
+
+function checkLogin(sectionId) {
+  if (localStorage.getItem("isLogin") !== "true") {
+    alert("Please login first");
+    window.location.href = "login.html";
+  } else {
+    document.getElementById(sectionId).scrollIntoView();
+  }
+}
+
+
+function saveHistory(action, value, key) {
+  let user = localStorage.getItem("userName");
+  if (!user) return;
+
+  let allHistory = JSON.parse(localStorage.getItem("history")) || {};
+
+  if (!allHistory[user]) {
+    allHistory[user] = [];
+  }
+
+  allHistory[user].push({
+    action: action,
+    value: value,
+    key: key || "—",   // 🔹 Save key here
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("history", JSON.stringify(allHistory));
+}
+
+window.onload = function () {
+  if (localStorage.getItem("isLogin") === "true") {
+    document.getElementById("userName").innerText =
+      localStorage.getItem("userName");
+  }
+};
+
+document.getElementById("userName").addEventListener("click", function () {
+  window.location.href = "profile.html";
+});
+
+
+
+
+//toggle dark mode
+
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+
+//toast function
+function showToast(msg){
+  let t = document.createElement("div");
+  t.innerText = msg;
+  t.style.cssText = "position:fixed;bottom:20px;right:20px;background:#8e44ad;color:white;padding:10px;border-radius:8px;";
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+
+showToast("Encrypted Successfully 🔒");
+
+document.getElementById("encryptKey").addEventListener("input", function () {
+  let val = this.value;
+  let strength = "Weak ❌";
+  let color = "red";
+
+  if (val.length >= 8) {
+    strength = "Medium ⚠️";
+    color = "orange";
+  }
+  if (/[A-Z]/.test(val) && /[0-9]/.test(val) && val.length >= 10) {
+    strength = "Strong ✅";
+    color = "green";
+  }
+
+  let el = document.getElementById("keyStrength");
+  el.innerText = "Key Strength: " + strength;
+  el.style.color = color;
+});
+
+
+//copy to clipboard
+function copyText(id) {
+  let text = document.getElementById(id).innerText;
+  if (!text) {
+    alert("Nothing to copy!");
+    return;
+  }
+  navigator.clipboard.writeText(text);
+  alert("Copied successfully ✅");
+}
+
+
+function showToast(message, color) {
+  let toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.style.background = color;
+  toast.style.visibility = "visible";
+
+  setTimeout(() => {
+    toast.style.visibility = "hidden";
+  }, 2000);
+}
+
+    
+</script>
+
+</body>
+</html>  
